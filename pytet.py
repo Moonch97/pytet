@@ -1,3 +1,4 @@
+#20171488 문채원
 from matrix import *
 import random
 
@@ -239,12 +240,14 @@ while True:
             arrayBlk = block7[N]
 
     elif key == ' ': # drop the block
-        while(top > 0):
-
+        for i in range(14):
             if tempBlk.anyGreaterThan(1):
-                break
+                if key == ' ':
+                    break
+            top += 1    
 
-            top += 1
+
+
     else:
         print('Wrong key!!!')
         continue
@@ -261,10 +264,34 @@ while True:
             top -= 1
             newBlockNeeded = True
         elif key == 'w': # undo: rotate the block counter-clockwise
-            print('Not implemented')
-        elif key == ' ': # undo: move up
-            print('Not implemented')
+            N = N - 1
+            if N < 0:
+                N = 3
+            if ran_num == 1:
+                arrayBlk = block1
 
+            elif ran_num == 2:
+                arrayBlk = block2[N]
+
+            elif ran_num == 3:
+                arrayBlk = block3[N]
+
+            elif ran_num == 4:
+                arrayBlk = block4[N]
+
+            elif ran_num == 5:
+                arrayBlk = block5[N]
+
+            elif ran_num == 6:
+                arrayBlk = block6[N]
+
+            elif ran_num == 7:
+                arrayBlk = block7[N]
+        elif key == ' ': # undo: move up
+            top -= 1
+            newBlockNeeded = True
+
+        currBlk = Matrix(arrayBlk) # 화면에 등장하는 블록 (인자: 2차원배열로 줌)
         tempBlk = iScreen.clip(top, left, top+currBlk.get_dy(), left+currBlk.get_dx())
         tempBlk = tempBlk + currBlk
 
