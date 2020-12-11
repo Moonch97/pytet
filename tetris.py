@@ -3,6 +3,17 @@ from random import *
 from enum import Enum
 #import LED_display as LMD 
 
+class TextColor():
+    red    = "\033[31m"
+    green  = "\033[32m"
+    yellow = "\033[33m"
+    blue   = "\033[34m"
+    purple = "\033[35m"
+    cyan   = "\033[36m"
+    white  = "\033[37m"
+    pink   = "\033[95m"
+### end of class TextColor():
+
 class TetrisState(Enum):
     Running = 0
     NewBlock = 1
@@ -30,7 +41,9 @@ class Tetris():
 
         for i in range(Tetris.nBlockTypes):
             for j in range(Tetris.nBlockDegrees):
-                Tetris.setOfBlockObjects[i][j] = Matrix(setOfBlockArrays[i][j])
+                mat = Matrix(setOfBlockArrays[i][j])
+                #mat.mulc(i+1)
+                Tetris.setOfBlockObjects[i][j] = mat
         return
 		
     def createArrayScreen(self):
@@ -63,43 +76,6 @@ class Tetris():
         self.left = Tetris.iScreenDw + self.iScreenDx//2 - 2
         self.state = TetrisState.NewBlock
         return
-
-    def printScreen(self):
-        array = self.oScreen.get_array()
-
-        for y in range(self.oScreen.get_dy()-Tetris.iScreenDw):
-            for x in range(Tetris.iScreenDw, self.oScreen.get_dx()-Tetris.iScreenDw):
-                if array[y][x] == 0:
-                    print("□", end='')
-                    #LMD.set_pixel(y, 19-x, 0)
-                elif array[y][x] == 1:
-                    print("■", end='')
-                    #LMD.set_pixel(y, 19-x, 4)
-                else:
-                    print("XX", end='')
-                    #continue
-            print()
-
-    def deleteFullLines(self): # To be implemented!!
-        
-        trash=0
-        checkline = self.currBlk.get_dy()
-        if self.top + self.currBlk.get_dy()-1 >= self.iScreenDy :
-            checkline = self.iScreenDy - self.top
-        arrayScreen = self.createArrayScreen()
-        nScreen = Matrix(arrayScreen)
-        spaceline = nScreen.clip(0, 0, 1, nScreen.get_dx())
-
-        for i in range(checkline-1,-1,-1):
-            xline = self.top+i+trash
-            line = self.oScreen.clip(xline,0,xline+1,self.oScreen.get_dx())
-            if line.sum() == self.oScreen.get_dx() :
-                temp = self.oScreen.clip(0,0,xline,self.oScreen.get_dx())
-                self.oScreen.paste(temp,1,0)
-                self.oScreen.paste(spaceline,0,0)
-                trash +=1
-        
-        return self.oScreen
 
     def accept(self, key): 
         if self.state == TetrisState.NewBlock:
@@ -159,6 +135,45 @@ class Tetris():
             self.oScreen = Matrix(self.iScreen)
 
         return self.state
+
+    def printScreen(self):
+        array = self.oScreen.get_array()
+
+        for y in range(self.oScreen.get_dy()-Tetris.iScreenDw):
+            for x in range(Tetris.iScreenDw, self.oScreen.get_dx()-Tetris.iScreenDw):
+                if array[y][x] == 0:
+                    print("□", end='')
+                    #LMD.set_pixel(y, 19-x, 0)
+                elif array[y][x] == 1:
+                    print("■", end='')
+                    #LMD.set_pixel(y, 19-x, 4)
+                else:
+                    print("XX", end='')
+                    #continue
+            print()
+
+    def deleteFullLines(self): # To be implemented!!
+        
+        trash=0
+        checkline = self.currBlk.get_dy()
+        if self.top + self.currBlk.get_dy()-1 >= self.iScreenDy :
+            checkline = self.iScreenDy - self.top
+        arrayScreen = self.createArrayScreen()
+        nScreen = Matrix(arrayScreen)
+        spaceline = nScreen.clip(0, 0, 1, nScreen.get_dx())
+
+        for i in range(checkline-1,-1,-1):
+            xline = self.top+i+trash
+            line = self.oScreen.clip(xline,0,xline+1,self.oScreen.get_dx())
+            if line.sum() == self.oScreen.get_dx() :
+                temp = self.oScreen.clip(0,0,xline,self.oScreen.get_dx())
+                self.oScreen.paste(temp,1,0)
+                self.oScreen.paste(spaceline,0,0)
+                trash +=1
+        
+        return self.oScreen
+
+
 		
    
 
